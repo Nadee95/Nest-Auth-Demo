@@ -33,5 +33,12 @@ This is a simple demo application built with **NestJS**, **Prisma**, and **JWT**
 ```bash
 git clone https://github.com/nadee95/nestjs-auth-demo.git
 cd nestjs-auth-demo
-pnpm install
-pnpm run
+
+# development
+$ pnpm run start
+
+# watch mode
+$ pnpm run start:dev
+
+# production mode
+$ pnpm run start:prod
