@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model session {
+  id           Int      @id @default(autoincrement())
+  sessionToken String   @unique(map: "Session_sessionToken_key")
+  userId       Int
+  expires      DateTime
+  user         user     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Session_userId_fkey")
+
+  @@index([userId], map: "Session_userId_idx")
+}
+
+model user {
+  id                            Int       @id @default(autoincrement())
+  email                         String    @unique(map: "User_email_key")
+  name                          String
+  departmentId                  Int?
+  passwordHash                  String
+  deactivationReason            String?
+  createdAt                     DateTime  @default(now())
+  updatedAt                     DateTime
+  isActive                      Boolean
+  userRoleId                    Int?
+  isWithDefaultPassword         Boolean   @default(true)
+  resetPasswordTokenGeneratedAt DateTime?
+  account                       account[]
+  session                       session[]
+  userRole                      userrole? @relation(fields: [userRoleId], references: [id], onDelete: Cascade, map: "User_userRoleId_fkey")
+
+  @@index([userRoleId], map: "User_userRoleId_fkey")
+}
+
+model userrole {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  user        user[]
+}
+
+model verificationtoken {
+  identifier String
+  token      String   @unique(map: "VerificationToken_token_key")
+  expires    DateTime
+
+  @@unique([identifier, token], map: "VerificationToken_identifier_token_key")
+}
