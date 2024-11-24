@@ -26,7 +26,7 @@ This is a simple demo application built with **NestJS**, **Prisma**, and **JWT**
   
   > You can use any of the databases supported by Prisma. In this demo, we assume PostgreSQL, but you can adapt it based on your setup.
 
-## Installati
+## Installation
 
 ### 1. Clone the Repository
 
