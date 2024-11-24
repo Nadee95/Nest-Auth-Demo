@@ -34,8 +34,8 @@ export class AuthController {
       return { status: HttpStatus.CREATED, message: 'User registered successfully.'};
     } catch (error) {
       throw new HttpException(
-        'Failed to create user. Please try again.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        error.message || 'Internal server error.',
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }

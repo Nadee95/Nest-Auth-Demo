@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { LoginDto, RegisterDto } from './auth.schema';
 import { DatabaseService } from '../database/database.service';
 import {hash, compareSync} from 'bcrypt';
@@ -108,9 +108,18 @@ export class AuthService {
 
   async registerUser(registerDto: RegisterDto) {
 
+    const isExistingUser = await this.prisma.user.findUnique({
+      where: {
+        email: registerDto.email,
+      }
+    });
+
+    if(isExistingUser){
+      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+    }
+
     const defaultPassword = generateRandomString(8);
     const userDefaultPassword = await hash(defaultPassword, 10);
-    console.log(defaultPassword);
 
     try {
        await this.prisma.user.create({
@@ -125,7 +134,7 @@ export class AuthService {
 
       });
     } catch (error) {
-      throw new Error('Failed to create user.');
+      throw new Error('Failed to create user: ' + error);
     }
   }
 }
